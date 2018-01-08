@@ -11,6 +11,7 @@
         <module>time-server-bio</module>
         <module>time-server-bio-pool</module>
         <module>time-server-nio</module>
+        <module>time-server-nio2</module>
     </modules>
     <packaging>pom</packaging>
 
