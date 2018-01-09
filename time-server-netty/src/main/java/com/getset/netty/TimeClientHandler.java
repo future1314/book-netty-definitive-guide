@@ -11,20 +11,23 @@ import java.nio.charset.Charset;
 
 public class TimeClientHandler extends ChannelInboundHandlerAdapter {
 
+    private int count = 0;
+
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        byte[] request = "QUERY TIME ORDER".getBytes();
-        ByteBuf buffer = Unpooled.buffer(request.length);
-        ctx.writeAndFlush(buffer.writeBytes(request));
+        byte[] request = ("QUERY TIME ORDER" + System.getProperty("line.separator")).getBytes();
+        ByteBuf buffer;
+        for (int i = 0; i < 100; i++) {
+            buffer = Unpooled.buffer(request.length);
+            buffer.writeBytes(request);
+            ctx.writeAndFlush(buffer);
+        }
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        ByteBuf byteBuf = (ByteBuf)msg;
-        byte[] body = new byte[byteBuf.readableBytes()];
-        byteBuf.readBytes(body);
-        System.out.println("Now is " + new String(body, Charset.defaultCharset()));
-        ctx.close();
+        String body = (String)msg;
+        System.out.println("[" + ++count + "] Now is " + body);
     }
 
     @Override

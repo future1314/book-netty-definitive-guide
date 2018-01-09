@@ -9,16 +9,16 @@ import java.nio.charset.Charset;
 import java.util.Date;
 
 public class TimeServerHandler extends ChannelInboundHandlerAdapter {
+    private int count = 0;
+
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        ByteBuf byteBuf = (ByteBuf)msg;
-        byte[] body = new byte[byteBuf.readableBytes()];
-        byteBuf.readBytes(body);
-        String query = new String(body, Charset.defaultCharset());
-        System.out.println("Time server received query: " + query);
-        String currentTime = "QUERY TIME ORDER".equals(query) ? new Date().toString() : "BAD ORDER";
+        String body = (String)msg;
+        System.out.println("[" + ++count + "] Time server received query: " + body);
+        String currentTime = "QUERY TIME ORDER".equals(body) ? new Date().toString() : "BAD ORDER";
+        currentTime = currentTime + System.getProperty("line.separator");
         ByteBuf resp = Unpooled.copiedBuffer(currentTime.getBytes());
-        ctx.write(resp);
+        ctx.writeAndFlush(resp);
     }
 
     @Override
