@@ -17,6 +17,7 @@
         <module>serialization</module>
         <module>message-pack</module>
         <module>echo-server-msgpack</module>
+        <module>book-server-protobuf</module>
     </modules>
     <packaging>pom</packaging>
 
